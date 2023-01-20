@@ -1,7 +1,7 @@
 import React from "react";
 import './noMatch.css'
 
-const NoMatch = props => {
+const NoMatch = () => {
   return (
     <div>
       Pagina não encontrada...

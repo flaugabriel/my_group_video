@@ -12,7 +12,6 @@ WORKDIR $APP_HOME
 ADD Gemfile $APP_HOME/Gemfile
 ADD Gemfile.lock $APP_HOME/Gemfile.lock
 
-# Copy lib files to third party folder
 COPY lib/ $APP_HOME/vendor/
 
 ADD Gemfile* $APP_HOME/

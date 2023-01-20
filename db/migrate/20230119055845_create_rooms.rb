@@ -2,8 +2,9 @@ class CreateRooms < ActiveRecord::Migration[6.1]
   def change
     create_table :rooms do |t|
       t.string :name
+      t.string :code
       t.integer :status
-      t.reference :media_record
+      t.references :media_record
 
       t.timestamps
     end

@@ -1,11 +1,10 @@
-FROM node:16.18.1
+FROM node:18.18.1
 ENV PORT 3000
-RUN mkdir /app
 WORKDIR /app
 COPY start-client.sh ./
 COPY package.json ./
 COPY package-lock.json ./
 COPY ./ ./
-RUN npm config set proxy http://domain:8080
+RUN npm config delete proxy
 RUN npm i
 EXPOSE 3000
