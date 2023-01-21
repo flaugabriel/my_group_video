@@ -1,15 +1,9 @@
-class UserRoomsController < ApplicationController
-  before_action :set_user_room, only: [:show, :update, :destroy]
-
-  # GET /user_rooms
-  def index
-    @user_rooms = UserRoom.all
-
-    render json: @user_rooms
-  end
+class Api::V1::UserRoomsController < ApplicationController
+  before_action :set_user_room_by_room, only: :show_users
+  before_action :set_user_room, only: :remove_user
 
   # GET /user_rooms/1
-  def show
+  def show_users
     render json: @user_room
   end
 
@@ -24,22 +18,17 @@ class UserRoomsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /user_rooms/1
-  def update
-    if @user_room.update(user_room_params)
-      render json: @user_room
-    else
-      render json: @user_room.errors, status: :unprocessable_entity
-    end
-  end
-
   # DELETE /user_rooms/1
-  def destroy
+  def remove_user
     @user_room.destroy
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def set_user_room_by_room
+      @user_room = UserRoom.where(room_id: params[:room_id])
+    end
+
     def set_user_room
       @user_room = UserRoom.find(params[:id])
     end

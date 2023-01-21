@@ -4,7 +4,28 @@ pt-BR:
       all: "Voçê não tem acesso á este recurso"
 
   activerecord:
+    models:
+      media_record: Registro de mídia
+      room: Sala
+    attributes: 
+      media_record: 
+        code: Código
+        title: Titulo
+        description: Descrição
+        url_video: Url do Video
+        video: Video
+      room:
+        code: Código
+        name: Nome
+        visualizations: Visualizações
+  
     errors:
+      models:
+        room:
+          attributes:
+            media_record: 
+              blank: 'Deve existir'
+
       messages:
         record_invalid: 'A validação falhou: %{errors}'
         restrict_dependent_destroy:

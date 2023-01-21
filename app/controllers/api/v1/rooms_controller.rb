@@ -1,4 +1,4 @@
-class RoomsController < ApplicationController
+class Api::V1::RoomsController < ApplicationController
   before_action :set_room, only: [:show, :update, :destroy]
 
   # GET /rooms
@@ -46,6 +46,6 @@ class RoomsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def room_params
-      params.require(:room).permit(:name, :status, :media_record)
+      params.require(:room).permit(:name, :status, :media_record, media_record: [:code, :title, :description, :user_id, :video])
     end
 end
