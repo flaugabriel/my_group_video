@@ -1,23 +1,19 @@
 class Api::V1::UserRoomSerializer < ActiveModel::Serializer
-  attributes :id, :user, :room, :created_at
+  attributes :id, :user, :admin, :date_add
 
   def id
     object.id || 0
   end
 
   def admin
-    object.admin ? 'Administrador' : '' || ''
+    object.admin ? 'Administrador' : 'Convidado' || ''
   end
 
   def user
     object.user.nickname || ''
   end
 
-  def room
-    object.room.name || ''
-  end
-
-  def created_at
-    object.created_at || ''
+  def date_add
+    object.created_at.to_s|| ''
   end
 end

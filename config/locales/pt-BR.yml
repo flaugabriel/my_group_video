@@ -18,14 +18,6 @@ pt-BR:
       room:
         name: Nome
         visualizations: Visualizações
-  
-    errors:
-      models:
-        room:
-          attributes:
-            media_video: 
-              blank: 'Deve existir'
-
       messages:
         record_invalid: 'A validação falhou: %{errors}'
         restrict_dependent_destroy:

@@ -1,7 +1,7 @@
 class Api::V1::UserRoomsController < ApplicationController
 
   def show_users
-    rooms = Room.order('updated_at desc')
+    rooms = UserRoom.where(room_id: params[:room_id]).order('created_at ASC')
 
     return json_error_response('Não foi encontrado salas', :not_found) unless rooms.present?
 
@@ -19,7 +19,9 @@ class Api::V1::UserRoomsController < ApplicationController
   end
 
   def remove_user
-    return json_error_response('Não foi encontrado este Usuário', :not_found) unless @user_room.present?
+    @user_room = UserRoom.find_by(id: params[:id])
+    return json_error_response('Não foi encontrado este usuário', :not_found) unless @user_room.present?
+
 
     @user_room.destroy
 
@@ -27,13 +29,6 @@ class Api::V1::UserRoomsController < ApplicationController
   end
 
   private
-
-    def set_user_room
-      @user_room = UserRoom.find_by(id: params[:id])
-      return json_error_response('Não foi encontrado este usuário', :not_found) unless @user_room.present?
-
-      @user_room
-    end
 
     def user_room_params
       params.require(:user_room).permit(:admin, :room_id, :user_id)
