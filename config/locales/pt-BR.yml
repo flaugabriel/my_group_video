@@ -5,17 +5,17 @@ pt-BR:
 
   activerecord:
     models:
-      media_record: Registro de mídia
+      media_video: Registro de mídia
       room: Sala
+      user: Usuário
     attributes: 
-      media_record: 
-        code: Código
+      media_video: 
+        code_access: Código de acesso
         title: Titulo
         description: Descrição
         url_video: Url do Video
         video: Video
       room:
-        code: Código
         name: Nome
         visualizations: Visualizações
   
@@ -23,7 +23,7 @@ pt-BR:
       models:
         room:
           attributes:
-            media_record: 
+            media_video: 
               blank: 'Deve existir'
 
       messages:

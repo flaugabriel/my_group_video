@@ -43,25 +43,22 @@ ActiveRecord::Schema.define(version: 2023_01_20_084816) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "media_records", force: :cascade do |t|
-    t.string "code"
+  create_table "media_videos", force: :cascade do |t|
+    t.string "code_access"
     t.string "title"
     t.string "description"
-    t.bigint "user_id", null: false
+    t.bigint "room_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "url_player"
-    t.index ["user_id"], name: "index_media_records_on_user_id"
+    t.index ["room_id"], name: "index_media_videos_on_room_id"
   end
 
   create_table "rooms", force: :cascade do |t|
     t.string "name"
-    t.string "code"
     t.integer "status"
-    t.bigint "media_record_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["media_record_id"], name: "index_rooms_on_media_record_id"
   end
 
   create_table "user_rooms", force: :cascade do |t|
@@ -82,7 +79,7 @@ ActiveRecord::Schema.define(version: 2023_01_20_084816) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "media_records", "users"
+  add_foreign_key "media_videos", "rooms"
   add_foreign_key "user_rooms", "rooms"
   add_foreign_key "user_rooms", "users"
 end

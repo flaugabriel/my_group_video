@@ -1,8 +1,8 @@
 version: "3"
 
 services:
-  web: &web
-    container_name: web
+  backend: &backend
+    container_name: backend
     build:
       context: .
       dockerfile: DockerFile
@@ -26,11 +26,11 @@ services:
     tty: true
     stdin_open: true
     volumes:
-      - .:/web
+      - .:/backend
     ports:
       - 3000:3000
     depends_on:
-      - web
+      - backend
 
   db:
     image: postgres

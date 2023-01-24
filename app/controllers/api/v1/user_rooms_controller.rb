@@ -1,39 +1,40 @@
 class Api::V1::UserRoomsController < ApplicationController
-  before_action :set_user_room_by_room, only: :show_users
-  before_action :set_user_room, only: :remove_user
 
-  # GET /user_rooms/1
   def show_users
-    render json: @user_room
+    rooms = Room.order('updated_at desc')
+
+    return json_error_response('Não foi encontrado salas', :not_found) unless rooms.present?
+
+    render json: rooms, each_serializer: Api::V1::UserRoomSerializer, status: :ok
   end
 
-  # POST /user_rooms
-  def create
+  def add_user
     @user_room = UserRoom.new(user_room_params)
 
     if @user_room.save
-      render json: @user_room, status: :created, location: @user_room
+      render json: @user_room, each_serializer: Api::V1::UserRoomSerializer, status: :ok
     else
-      render json: @user_room.errors, status: :unprocessable_entity
+      render json: @user_room.errors.full_messages, status: :unprocessable_entity
     end
   end
 
-  # DELETE /user_rooms/1
   def remove_user
+    return json_error_response('Não foi encontrado este Usuário', :not_found) unless @user_room.present?
+
     @user_room.destroy
+
+    json_error_response('Usuário da sala removido', :ok)
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user_room_by_room
-      @user_room = UserRoom.where(room_id: params[:room_id])
-    end
 
     def set_user_room
-      @user_room = UserRoom.find(params[:id])
+      @user_room = UserRoom.find_by(id: params[:id])
+      return json_error_response('Não foi encontrado este usuário', :not_found) unless @user_room.present?
+
+      @user_room
     end
 
-    # Only allow a list of trusted parameters through.
     def user_room_params
       params.require(:user_room).permit(:admin, :room_id, :user_id)
     end
