@@ -34,6 +34,8 @@ class Room < ApplicationRecord
   end
 
   def user_room_build
-    return UserRoom.create(user_id: $user.id, room_id: self.id, admin: 1) if $user.nickname.present?
+    if $user.present?
+      UserRoom.create(user_id: $user.id, room_id: self.id, admin: 1)
+    end
   end
 end

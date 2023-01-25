@@ -1,6 +1,6 @@
 class Api::V1::RoomSerializer < ActiveModel::Serializer
   include Rails.application.routes.url_helpers
-  attributes :id, :name, :media_video, :status, :create_by
+  attributes :id, :name, :media_video, :status, :create_by, :created_at
 
   def id
     object.id || 0
@@ -19,7 +19,7 @@ class Api::V1::RoomSerializer < ActiveModel::Serializer
   end
 
   def created_at
-    object.created_at || ''
+    object.created_at.to_s || ''
   end
 
   def media_video

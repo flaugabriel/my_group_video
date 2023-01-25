@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Sidebar = () => {
+
 	return (
 		<nav className="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
 			<div className="container">

@@ -14,7 +14,7 @@ function App() {
       <BrowserRouter>
         <div className="container-fluid main">
           <div className="row">
-            <Sidebar />
+            <Sidebar/>
             <main className="col-md-9 ms-sm-auto col-lg-12">
               <Routes>
                 <Route path="/" element={<Home urlApi={API_URL} />} />

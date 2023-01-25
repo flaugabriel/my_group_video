@@ -2,7 +2,7 @@ class Api::V1::RoomsController < ApplicationController
   before_action :set_room, only: [:show, :update, :destroy]
 
   def index
-    rooms = Room.order('updated_at desc')
+    rooms = Room.where(status: :public_room).order('updated_at desc')
     # filtered_rooms = Room::IndexFilter.new.call(rooms, params)
 
     return json_error_response('Não foi encontrado salas', :not_found) unless rooms.present?
