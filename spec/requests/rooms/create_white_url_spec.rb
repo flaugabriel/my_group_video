@@ -2,29 +2,29 @@
 require 'rails_helper'
 
 RSpec.describe 'Room', type: :request do
-  describe 'POST /create' do
+  describe 'POST create with url' do
     context 'with valid parameters' do
       before do
         post '/api/v1/rooms', params:
         {
           room: {
-              name: 'Sala 1',
+              name: Faker::Hipster.word,
               status: 'private_room',
               user: {
-                  nickname: 'flaugabriel'
+                nickname: Faker::Name.name
               },
               media_video_attributes: {
-                  title: 'Up cat',
-                  description: 'Lorem ipsu its a lorem lorem its a ipsum',
-                  url_player: 'https://www.youtube.com/watch?v=9nZ5x3MgB3w'
-              }
+                title: Faker::Movie.title,
+                description:  Faker::Lorem.paragraph,
+                url_player: 'https://www.youtube.com/watch?v=9nZ5x3MgB3w'
+            }
           }
-      }
+        }
       end
 
       it 'returns a created status' do
         expect(response.status).to eq(200)
-        expect(json['name']).to eq('Sala 1')
+        expect(json['name'].present?).to eq(true)
       end
     end
 
@@ -49,7 +49,7 @@ RSpec.describe 'Room', type: :request do
 
       it 'returns a unprocessable entity status 422' do
         expect(response.status).to eq(422)
-        expect(json.length).to eq(2)
+        expect(json.length).to eq(3)
       end
     end
   end

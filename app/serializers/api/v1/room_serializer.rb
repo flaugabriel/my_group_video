@@ -27,7 +27,7 @@ class Api::V1::RoomSerializer < ActiveModel::Serializer
       code_access: object.media_video.code_access || '',
       title: object.media_video.title || '',
       description: object.media_video.description || '',
-      video: object.media_video.video_url || false,
+      video: object.media_video.video.attached? ? rails_blob_url(object.media_video.video) : false,
       url_player: object.media_video.url_player || false
     }
   end

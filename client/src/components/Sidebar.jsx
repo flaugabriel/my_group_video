@@ -11,13 +11,6 @@ const Sidebar = () => {
 						<button className="btn btn-secondary me-2" type="button" disabled>
 							Meu nome
 						</button>
-						<button type="button" className="btn btn-primary position-relative me-2">
-							Convites
-							<span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-								99+
-								<span className="visually-hidden">unread messages</span>
-							</span>
-						</button>
 					</ul>
 				</div>
 			</div>

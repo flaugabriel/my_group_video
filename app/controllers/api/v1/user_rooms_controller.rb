@@ -1,4 +1,5 @@
 class Api::V1::UserRoomsController < ApplicationController
+  before_action :audit_access_code, only: :add_user
 
   def show_users
     rooms = UserRoom.where(room_id: params[:room_id]).order('created_at ASC')
@@ -30,7 +31,12 @@ class Api::V1::UserRoomsController < ApplicationController
 
   private
 
+    def audit_access_code
+      response = UserRooms::CodeAccessService.call(user_room_params)
+      return json_error_response(response[:data], response[:status]) unless response[:status] == 202
+    end
+
     def user_room_params
-      params.require(:user_room).permit(:admin, :room_id, :user_id)
+      params.require(:user_room).permit(:admin, :room_id, :user_id, :code_access)
     end
 end

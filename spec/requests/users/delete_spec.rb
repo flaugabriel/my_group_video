@@ -9,7 +9,9 @@ RSpec.describe 'User', type: :request do
     end
 
     it 'returns status code 204' do
-      expect(response).to have_http_status(204)
+      expect(json['status']).to eq('ok')
+      expect(response).to have_http_status(200)
+      expect(json['messenger']).to eq('Usuário removido')
     end
   end
 end

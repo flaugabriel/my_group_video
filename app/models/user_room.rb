@@ -1,4 +1,5 @@
 class UserRoom < ApplicationRecord
+  attr_accessor :code_access
   validates_uniqueness_of :user, message: 'deve ser unico!'
 
   belongs_to :room
