@@ -18,7 +18,11 @@ module.exports = {
         "react"
     ],
     "rules": {
-        "react/prop-types": "off",
-        "react/react-in-jsx-scope": "off"
+        "react/react-in-jsx-scope": "off",
+        "indent": ["warn", 4],
+        "react/jsx-indent": ["warn", 4, { "checkAttributes": true}],
+        "react/destructuring-assignment": "off",
+        "no-nested-ternary": "warn",
+        "react/prop-types": "warn"
       }
     }

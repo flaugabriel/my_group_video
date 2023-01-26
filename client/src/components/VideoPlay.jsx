@@ -1,15 +1,104 @@
-import React from "react";
+import React, {useRef, useState } from "react";
+import ReactPlayer from 'react-player'
+import { toast } from "react-toastify";
+import ModalSharedLink from '../components/ModalSharedLink';
+import axios from "axios";
 
-const VideoPlay = () => {
-  const [checked, setChecked] = React.useState(false);
+const VideoPlay = (props) => {
+  const [error, setError] = useState(null);
+  const [videoStatus, setVideoStatus] = useState(false);
+  const [videoType, setVideoType] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [inputs, setInputs] = useState({});
+  const refresh = useRef(null)
 
-  const handleChange = () => {
-    setChecked(!checked);
+  const toggleVideoType = () => {
+    setVideoType(!videoType);
   };
 
+  const toggleVideoPublic = () => {
+    setVideoStatus(!videoStatus);
+  };
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    setInputs(values => ({...values, [name]: value}))
+  }
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const newRoom = {
+      room: {
+        name: inputs.name,
+        status: videoStatus === true ? 'public_room' : 'private_room',
+        user:{
+          nickname: inputs.nickname
+        },
+        media_video_attributes: {
+          title: inputs.title,
+          description: inputs.description,
+          url_player: inputs.url_player || null,
+          video: inputs.video || null
+        }
+      }
+    }
+
+    axios({
+      url: props.urlApi + 'rooms',
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      data: JSON.stringify(newRoom),
+    }).then((response) => {
+      window.location.href = 'rooms/'+response.data.id
+    }).catch(error => {
+      setError(error);
+    });
+    
+    showAlert()
+  }
+
+  function clearForm(){
+    return setInputs({})
+  }
+
+  function showAlert() {
+    if (error) {
+      toast.error(error.response.data.base.pop(1));
+    } else {
+      toast.success('Sala criada!');
+    }
+  }
+
+  function deleteRoom(id){
+    axios.delete(`${props.urlApi}/rooms/${id}`).then((resp) => {
+			if(resp.data.status === 422){
+				toast.error(resp.data.messenger)
+			}else{
+        window.location.href = '/';
+        toast.success('Sala fechada');
+			}
+    });
+  }
+
   return (
-    <header className="py-5 mb-4">
+    <header className="py-5">
       <div className="container">
+        { props.video?.media_video !== undefined  ? 
+        <div className="text-center my-5">
+          <ReactPlayer className="bs-card-video" width="1250px" height="500px" url={props.video.media_video.url_player} />
+          <a className="btn btn-primary my-5 me-3" href="/">Voltar</a>
+          <a className="btn btn-info text-white my-5 me-3" data-bs-toggle="modal" href='/#' onClick={() => setOpenModal(true)} data-bs-target='#moda_shared_link'> Convidar</a>
+                      <ModalSharedLink room={props} openModal={openModal} urlApi={props.urlApi} refresh={refresh}/>
+          <a className="btn btn-danger my-5 me-3" href="#!" onClick={() => deleteRoom(props.video.id)}>Fecha sala</a>
+
+          {/* <a className="btn btn-info text-white my-5 me-3" data-bs-toggle="modal" href='/#' onClick={() => setOpenModal(true)} data-bs-target='#modal_add_user'> Convidar</a>
+                      <ModalUsers room={props} openModal={openModal} urlApi={props.urlApi} refresh={refresh}/> */}
+        </div>
+        :
         <div className="text-center my-5">
           <h1 className="fw-bolder">Bem vindo!</h1>
           <p className="lead mb-0">
@@ -19,12 +108,12 @@ const VideoPlay = () => {
           <br />
           <button
             type="button"
-            className="btn btn-primary"
+            className="btn btn-outline-dark"
             data-bs-toggle="modal"
             data-bs-target="#exampleModal"
             data-bs-whatever="@mdo"
           >
-            Começa ?
+            Começar ?
           </button>
 
           <div
@@ -51,7 +140,7 @@ const VideoPlay = () => {
                   <span className="text-danger">
                     Todos os campos são obrigatorios.
                   </span>
-                  <form>
+                  <form  onSubmit={handleSubmit}>
                     <div className="mb-3">
                       <label
                         htmlFor="recipient-name"
@@ -64,7 +153,9 @@ const VideoPlay = () => {
                         placeholder="Thor"
                         className="form-control"
                         id="recipient-name"
-                        value=""
+                        onChange={handleChange}
+                        value={inputs.nickname || ''}
+                        name="nickname"
                         required
                       />
                     </div>
@@ -80,7 +171,9 @@ const VideoPlay = () => {
                         placeholder="Minha sala bacana"
                         className="form-control"
                         id="recipient-name"
-                        value=""
+                        onChange={handleChange}
+                        value={inputs.name || ''}
+                        name="name"
                         required
                       />
                     </div>
@@ -89,12 +182,15 @@ const VideoPlay = () => {
                         className="form-check-input"
                         type="checkbox"
                         id="flexSwitchCheckChecked"
-                        checked
+                        value={inputs.status || ''}
+                        name="status"
+                        onChange={toggleVideoPublic}
+                        checked={videoStatus}
                       />
                       <label
                         className="form-check-label"
                         htmlFor="flexSwitchCheckChecked"
-                        value=""
+                        required
                       >
                         Video publico?
                       </label>
@@ -111,8 +207,9 @@ const VideoPlay = () => {
                         placeholder="Meu video de gatinho"
                         className="form-control"
                         id="recipient-name"
-                        value=""
-                        required
+                        onChange={handleChange}
+                        value={inputs.title || ''}
+                        name="title"
                       />
                     </div>
                     <div className="form-check form-switch">
@@ -120,9 +217,8 @@ const VideoPlay = () => {
                         className="form-check-input"
                         type="checkbox"
                         id="flexSwitchCheckChecked"
-                        onChange={handleChange}
-                        checked={checked}
-                        required
+                        onChange={toggleVideoType}
+                        checked={videoType}
                       />
                       <label
                         className="form-check-label"
@@ -132,7 +228,7 @@ const VideoPlay = () => {
                         Fazer upload de um video?
                       </label>
                     </div>
-                    {checked ? (
+                    {videoType ? (
                       <div className="mb-3">
                         <label
                           htmlFor="recipient-name"
@@ -144,7 +240,9 @@ const VideoPlay = () => {
                           type="file"
                           className="form-control"
                           id="recipient-name"
-                          value=""
+                          onChange={handleChange}
+                          value={inputs.video || ''}
+                          name="video"
                         />
                       </div>
                     ) : (
@@ -159,7 +257,9 @@ const VideoPlay = () => {
                           type="text"
                           placeholder="https://www.site.com"
                           className="form-control"
-                          value=""
+                          onChange={handleChange}
+                          value={inputs.url_player || ''}
+                          name="url_player"
                           id="recipient-name"
                         />
                       </div>
@@ -171,27 +271,36 @@ const VideoPlay = () => {
                       <textarea
                         className="form-control"
                         id="message-text"
-                        value=""
+                        onChange={handleChange}
+                        value={inputs.description || ''}
+                        name="description"
                       ></textarea>
                     </div>
-                  </form>
-                </div>
-                <div className="modal-footer">
-                  <button
+                    <button
                     type="button"
-                    className="btn btn-secondary"
+                    className="btn btn-danger  me-3"
                     data-bs-dismiss="modal"
                   >
-                    Close
+                    Fechar
                   </button>
-                  <button type="button" className="btn btn-primary">
-                    Send message
+                  <button type="submit" className="btn btn-success me-3">
+                    Salvar
                   </button>
+
+                  <button
+                    type="button"
+                    className="btn btn-secondary  me-3"
+                    onClick={clearForm}
+                  >
+                    Limpar
+                  </button>
+                  </form>
                 </div>
               </div>
             </div>
           </div>
         </div>
+        }
       </div>
     </header>
   );

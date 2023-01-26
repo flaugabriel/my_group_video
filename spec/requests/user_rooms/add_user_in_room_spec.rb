@@ -34,13 +34,15 @@ describe 'Add users in room' do
       user_room: {
         code_access: @code_access,
         room_id: @room_id,
-        user_id: @user_id
+        user: {
+          nickname: Faker::Name.name
+        }
       }
     }
   end
 
   it 'check if his is added' do
     expect(response.status).to eq(200)
-    expect(json['date_add'].present?).to eq(true)
+    expect(json['user'].present?).to eq(true)
   end
 end

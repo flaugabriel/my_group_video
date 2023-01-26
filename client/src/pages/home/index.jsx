@@ -13,7 +13,6 @@ const Home = (props) => {
   useEffect(() => {
     let mounted = true;
     getAPIData().then((items) => {
-      console.log("items", items);
       if (mounted) {
         setRooms(items);
       }
@@ -29,7 +28,7 @@ const Home = (props) => {
 
   return (
     <Fragment>
-      <VideoPlay />
+      <VideoPlay urlApi={props.urlApi}/>
       <div className="container">
         <div className="row">
           <div className="col-lg-8">
@@ -38,14 +37,16 @@ const Home = (props) => {
                   rooms.map((item) => (
                   <div key={item.id} className="col-lg-6">
                     <div  className="card mb-4">
-                        <ReactPlayer className="bs-card-video" width="414px" height="100" url={item.media_video.url_player} />
+                      <div className="player-wrapper">
+                        <ReactPlayer className="react-player"   width="100%" height="100%" url={item.media_video.url_player} />
+                      </div>
                       <div className="card-body">
                         <div className="small text-muted">Criado em: {item.created_at} { item.status == 'public_room' ? '- Publico' : ''}</div>
                         <h2 className="card-title h4">{item.name}</h2>
                         <p className="card-text">
                           {item.media_video.description}
                         </p>
-                        <a className="btn btn-primary" href="#!">
+                        <a className="btn btn-primary" href={`/rooms/${item.id}`}>
                          Entrar na sala →
                         </a>
                       </div>
@@ -86,27 +87,7 @@ const Home = (props) => {
                 </div>
               </div>
             </div>
-            <div className="card mb-4">
-              <div className="card-header">Pesquisar sala</div>
-              <div className="card-body">
-                <div className="input-group">
-                  <input
-                    className="form-control"
-                    type="text"
-                    placeholder="Por nome"
-                    aria-label="Por nomePor nome"
-                    aria-describedby="button-search"
-                  />
-                  <button
-                    className="btn btn-primary"
-                    id="button-search"
-                    type="button"
-                  >
-                    Buscar
-                  </button>
-                </div>
-              </div>
-            </div>
+         
             <div className="card mb-4">
               <div className="card-header">Sobre</div>
               <div className="card-body">

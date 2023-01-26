@@ -34,7 +34,9 @@ describe 'show all users in room' do
       user_room: {
         code_access: @code_access,
         room_id: @room_id,
-        user_id: @user_id
+        user: {
+          nickname: Faker::Name.name
+        }
       }
     }
   end

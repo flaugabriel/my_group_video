@@ -1,6 +1,14 @@
 class Api::V1::UsersController < ApplicationController
   before_action :set_user, only: [:update, :destroy]
 
+  def index
+    users = User.all.select(:id, :nickname)
+
+    return json_error_response('Não foi encontrado usuários', :not_found) unless users.present?
+
+    render json: users, status: :ok
+  end
+
   def create
     @user = User.new(user_params)
 
