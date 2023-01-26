@@ -2,12 +2,14 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import VideoPlay from "../../../components/VideoPlay";
+import { toast } from "react-toastify";
 
 const RoomShow = (props) => {
   const { id } = useParams();
   const [room, setRoom] = useState({});
   const [users, setUsers] = useState({});
   const [isLoad, setIsLoad] = useState(true);
+  const [nickName, setNickname] = useState('')
 
   function getAPIData() {
     return axios.get(props.urlApi + "rooms/" + id).then((res) => res.data);
@@ -18,6 +20,8 @@ const RoomShow = (props) => {
   }
 
   useEffect(() => {
+		setNickname(localStorage.getItem("nickname"));
+
     let mounted = true;
 
     if (mounted && isLoad) {
@@ -35,9 +39,44 @@ const RoomShow = (props) => {
     return () => mounted;
   });
 
+  function removeObjectWithId(id) {
+    const objWithIdIndex = users.findIndex((obj) => obj.id === id);
+  
+    if (objWithIdIndex > -1) {
+      users.splice(objWithIdIndex, 1);
+    }
+  
+    return users;
+  }
+
+  function deleteUser(id, type){
+    axios.delete(`${props.urlApi}/user_rooms/remove_user/${id}`).then((resp) => {
+			if(resp.data.status === 422){
+				toast.error(resp.data.messenger)
+			}else{
+        if (type === 'admin') {
+          localStorage.clear();
+          window.location.href = '/'   
+        }else{
+          const newListUsers = removeObjectWithId(id)
+          setUsers(newListUsers)
+          toast.success('Usuario removido');
+        }
+			}
+    });
+  }
+
+  const currentUserOnVideo = () =>{
+    if(users && users.length > 0){ 
+      return users.map((obj) => obj.user === nickName).pop(1)
+    }else{
+      return false
+    }
+  }
+  
   return (
     <Fragment>
-      <VideoPlay video={room} urlApi={props.urlApi}/>
+      <VideoPlay video={room} urlApi={props.urlApi} current_user={nickName} canSeeVideo={currentUserOnVideo()}/>
       <div className="container">
         <div className="row">
           <div className="col-lg-6">
@@ -66,7 +105,14 @@ const RoomShow = (props) => {
                   <div  className="pb-3 mb-0 small lh-sm border-bottom w-100">
                     <div className="d-flex justify-content-between">
                       <strong className="text-gray-dark">{user.user}</strong>
-                      <a className="btn btn-danger" href="#">Remover</a>
+                      {
+                        nickName === room.create_by ?
+                          <a className="btn btn-danger" href="#!" onClick={() => deleteUser(user.id, '')}>Remover</a>
+                        :
+                         user.user === nickName ? 
+                         <a className="btn btn-danger" href="#!" onClick={() => deleteUser(user.id, 'admin')}>Sair da sala</a>
+                         : ''
+                      }
                     </div>
                     <span className="d-block">Adicionado em: {user.date_add}</span>
                     <span className="d-block">{user.admin}</span>

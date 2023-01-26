@@ -38,6 +38,7 @@ const Invitation = (props) => {
       if (response.data.status === 404) {
         setError(response.data.messenger)
       }else{
+      localStorage.setItem("nickname", newUserRoom.user_room.user.nickname);
       window.location.href = `http://${window.location.host}/rooms/${id}`
       }
     });
@@ -47,6 +48,7 @@ const Invitation = (props) => {
   }
 
   function showAlert() {
+    console.log(error);
     if (error) {
       toast.error(error);
     } else {
