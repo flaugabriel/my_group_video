@@ -3,7 +3,7 @@ Olá esta aplicação tem como objetivo a realização de teste de conhecimentos
 
 - Ruby 3.0.1
 - Rails 6.1.7.1
-- Node 10.17.0
+- Node 18.13.0
 - React 18.2.0
 - Docker 20.10.22
 - Postgres 15.1
