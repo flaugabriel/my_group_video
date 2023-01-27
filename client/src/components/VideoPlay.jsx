@@ -10,6 +10,7 @@ const VideoPlay = (props) => {
   const [videoType, setVideoType] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [inputs, setInputs] = useState({});
+  const [selectedFile, setSelectedFile] = useState(null);
   const refresh = useRef(null)
   
   const toggleVideoType = () => {
@@ -26,8 +27,14 @@ const VideoPlay = (props) => {
     setInputs(values => ({ ...values, [name]: value }))
   }
 
+  const handleFileSelect = (event) => {
+    setSelectedFile(event.target.files[0])
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    const formData = new FormData();
+    formData.append("selectedFile", selectedFile);
     const newRoom = {
       room: {
         name: inputs.name,
@@ -38,8 +45,8 @@ const VideoPlay = (props) => {
         media_video_attributes: {
           title: inputs.title,
           description: inputs.description,
-          url_player: inputs.url_player || null,
-          video: inputs.video || null
+          url_player: inputs.url_player || 'https://',
+          video: selectedFile || null
         }
       }
     }
@@ -48,10 +55,10 @@ const VideoPlay = (props) => {
       url: props.urlApi + 'rooms',
       method: "POST",
       headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
+        'Accept': 'application/json',
+        'Content-Type': 'multipart/form-data',
       },
-      data: JSON.stringify(newRoom),
+      data: newRoom,
     }).then((response) => {
       localStorage.setItem("nickname", response.data.create_by);
       window.location.href = 'rooms/' + response.data.id
@@ -93,7 +100,7 @@ const VideoPlay = (props) => {
           <div className="text-center my-5">
             {
               props.current_user && props.canSeeVideo ? 
-                <ReactPlayer className="bs-card-video" width="1250px" height="500px" url={props.video.media_video.url_player} />
+                <ReactPlayer className="bs-card-video" width="1250px" height="500px" url={props.video.media_video.url_player === 'https://' ? props.video.media_video.video : props.video.media_video.url_player} controls = {true}/>
                 : 
                 <Fragment>
                   <a className="btn btn-info text-white my-5 me-3" data-bs-toggle="modal" href='/#' onClick={() => setOpenModal(true)} data-bs-target='#moda_shared_link'> Clique aqui para visualizar o link de acesso!</a>
@@ -253,8 +260,8 @@ const VideoPlay = (props) => {
                             type="file"
                             className="form-control"
                             id="recipient-name"
-                            onChange={handleChange}
-                            value={inputs.video || ''}
+                            onChange={handleFileSelect}
+                            accept="video/mp4,video/x-m4v,video/*"
                             name="video"
                           />
                         </div>

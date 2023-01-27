@@ -39,6 +39,7 @@ const RoomShow = (props) => {
     return () => mounted;
   });
 
+
   function removeObjectWithId(id) {
     const objWithIdIndex = users.findIndex((obj) => obj.id === id);
   
@@ -73,7 +74,7 @@ const RoomShow = (props) => {
       return false
     }
   }
-  
+
   return (
     <Fragment>
       <VideoPlay video={room} urlApi={props.urlApi} current_user={nickName} canSeeVideo={currentUserOnVideo()}/>

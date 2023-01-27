@@ -57,7 +57,7 @@ const Home = (props) => {
                   <div key={item.id} className="col-lg-3">
                     <div className="card mb-4">
                       <div className="player-wrapper">
-                        <ReactPlayer className="react-player" width="100%" height="100%" url={item.media_video.url_player} />
+                        <ReactPlayer className="react-player" width="100%" height="100%" url={item.media_video.url_player === 'https://' ? item.media_video.video : item.media_video.url_player} controls = {true}/>
                       </div>
                       <div className="card-body">
                         <div className="small text-muted">Criado em: {item.created_at} {item.status == 'public_room' ? '- Publico' : ''}</div>
