@@ -1,4 +1,4 @@
-FROM node:18.18.1
+FROM node:18.13.0
 ENV PORT 3000
 WORKDIR /app
 COPY start-client.sh ./

@@ -43,9 +43,6 @@ const Home = (props) => {
                   <div className="accordion-body">
                   Ao realizar um upload você pode criar uma sala é convidar
                   pessoas por meio de um link para visualizar o video em grupo.
-                  <p className="text-info">
-                    As salas/nicknames/videos só ficam disponiveis por 1 hora, depois disso serão removidas.
-                  </p>
                   </div>
                 </div>
               </div>
@@ -73,7 +70,7 @@ const Home = (props) => {
                   </div>
                 ))
               ) : (
-                <span>Não foi encontrado nenhuma pessoa</span>
+                <span>Não foi encontrado nenhuma sala</span>
               )}
             </div>
             <nav aria-label="Pagination">
