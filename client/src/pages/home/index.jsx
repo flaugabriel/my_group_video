@@ -5,26 +5,21 @@ import ReactPlayer from 'react-player'
 
 const Home = (props) => {
   const [rooms, setRooms] = useState({});
+  const [isload, setIsload] = useState(true);
 
   function getAPIData() {
     return axios.get(props.urlApi + "rooms").then((res) => res.data);
   }
 
   useEffect(() => {
-    let mounted = true;
     getAPIData().then((items) => {
-      if (mounted) {
-        setRooms(items);
+      console.log(items);
+      if (items.length !== undefined) {
+        setIsload(false)
+        setRooms(items)
       }
     });
-    if (rooms && rooms.length > 0) {
-      mounted = false;
-    } else {
-      mounted = true;
-    }
-
-    return () => mounted;
-  });
+  },[isload]);
 
   return (
     <Fragment>

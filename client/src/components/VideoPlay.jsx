@@ -75,7 +75,7 @@ const VideoPlay = (props) => {
 
   function showAlert() {
     if (error) {
-      toast.error(error.response.data.base.pop(1));
+      toast.error(error.response.data.toString());
     } else {
       toast.success('Sala criada!');
     }
