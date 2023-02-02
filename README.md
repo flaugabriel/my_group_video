@@ -23,7 +23,6 @@ Logo na pagina inicial do app usuário clicando em no botão começar, apresenta
   * Todos os atributos apresentados na tabela acima (obrigatórios).
   * Quando finalizar a sala criada tera sua referencia no video criando uma dependencia 1x1
 
-
 ### Consulta documentação completa
 
 https://documenter.getpostman.com/view/8797440/2s8ZDeTJVU
