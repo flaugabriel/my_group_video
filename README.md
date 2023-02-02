@@ -1,5 +1,5 @@
 # README
-Olá esta aplicação tem como objetivo a realização de teste de conhecimentos em Ruby on Rails e frameworks SPA front-end em arquitetura em estrutura REST Full utiliando as seguintes stacks
+Olá esta aplicação tem como objetivo a realização de teste de conhecimentos em Ruby on Rails e frameworks SPA front-end em arquitetura em estrutura REST Full utilizando as seguintes stacks
 
 - Ruby 3.0.1
 - Rails 6.1.7.1
